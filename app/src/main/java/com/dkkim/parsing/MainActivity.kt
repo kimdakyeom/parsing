@@ -40,18 +40,17 @@ class MainActivity : AppCompatActivity() {
     @JvmName("getData1")
     fun getData(): String {
         val buffer = StringBuffer()
-        val str = editText!!.text.toString()
-        val location: String = URLEncoder.encode(str)
+        val str = editText!!.text.toString() // EditText에 작성된 Text 얻어오기
+        val location: String = URLEncoder.encode(str) //한글의 경우 인식이 안되서 utf-8 방식으로 encoding
         val queryUrl =
             ("http://apis.data.go.kr/1390802/AgriFood/MzenFoodCode/getKoreanFoodList?serviceKey=GYbh7D2DFLK834K3R0f009ILwoUOVS2FjkM7JkOVpvbt7iNpeYKdlenp8wf3rEldx3Jt75r8z9zLByTqdJdzCA%3D%3D&Page_Size=100000")
+
         try {
             val url = URL(queryUrl) // 문자열로 된 요청 url을 URL 객체로 생성.
             val input: InputStream = url.openStream() // url 위치로 인풋스트림 연결
             val factory = XmlPullParserFactory.newInstance()
             val xpp = factory.newPullParser()
-
-            // inputstream 으로부터 xml 입력받기
-            xpp.setInput(InputStreamReader(input, "UTF-8"))
+            xpp.setInput(InputStreamReader(input, "UTF-8")) // inputstream 으로부터 xml 입력받기
             var tag: String
             xpp.next()
             var eventType = xpp.eventType
@@ -63,8 +62,7 @@ class MainActivity : AppCompatActivity() {
                         if (tag == "item")
                         else if (tag == "food_Code") {
                             buffer.append("code : ")
-                            xpp.next()
-                            // food_Code 요소의 TEXT 읽어와서 문자열버퍼에 추가
+                            xpp.next() // food_Code 요소의 TEXT 읽어와서 문자열버퍼에 추가
                             buffer.append(xpp.text)
                             buffer.append("\n") // 줄바꿈 문자 추가
                         } else if (tag == "large_Name") {
